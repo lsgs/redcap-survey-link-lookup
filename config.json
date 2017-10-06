@@ -1,0 +1,34 @@
+{
+	"name": "Survey Link Lookup",
+
+	"namespace": "SurveyLinkLookupExternalModule",
+
+	"authors": [
+		{
+			"name": "Luke Stevens",
+			"email": "luke.stevens@mcri.edu.au",
+			"institution": "Murdoch Children's Research Institute"
+		}
+	],
+
+	"permissions": [
+	],
+
+	"description": "This module provides a page where you can enter a survey link or hash and get the details of the survey, including links to project and data entry form. A Link to the page is added to the Control Center left-hand menu.",
+
+	"links": {
+		"control-center": [
+			{
+				"name": "Survey Link Lookup",
+				"icon": "search",
+				"url": "index.php"
+			}
+		]
+	},
+
+	"system-settings": [
+	],
+	
+	"project-settings": [
+	]
+}
