@@ -12,6 +12,7 @@
 	],
 
 	"permissions": [
+             "hook_control_center"
 	],
 
 	"description": "This module provides a page where you can enter a survey link or hash and get the details of the survey, including links to project and data entry form. A Link to the page is added to the Control Center left-hand menu.",

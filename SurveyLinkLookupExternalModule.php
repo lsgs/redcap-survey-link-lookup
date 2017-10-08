@@ -224,19 +224,21 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
                 return $details;
         }
         
-        public function redcap_control_center() {
+        public function hook_control_center() {
+                global $lang;
+                // insert a link to the plugin following control_center_4582 = "Find Calculation Errors in Projects"
                 ?>
-                <div id='control-center-plugins' style='display:none;'>
-                    <div style="clear: both;padding-bottom:6px;margin:0 -6px 3px;border-bottom:1px solid #ddd;"></div>
-                    <b style="position:relative;">Plugins</b><br/>
-                    <span style="position: relative; float: left; left: 4px;">
-                        <!-- Plugins - add a line here for each super-user plugin-->
-                        <span class="glyphicon glyphicon-search"></span>&nbsp; <a href="<?php echo APP_PATH_WEBROOT_FULL;?>modules/survey_link_lookup_v1.0/index.php">Find Survey from Survey Hash</a><br/>
-                    </span>
-                </div>
+                <span id="SurveyLinkLookupExternalModule" style="display:block;">
+                    <img src="<?php echo APP_PATH_WEBROOT_FULL.'external_modules/images/puzzle_small.png';?>" style="position:relative;left:1px;">
+                    <span class="glyphicon glyphicon-search" style="vertical-align:middle;"></span>
+                    <a href="<?php echo APP_PATH_WEBROOT_FULL.'modules/survey_link_lookup_v1.0/index.php'?>">Survey Link Lookup</a>
+                </span>
                 <script type='text/javascript'>
                 $(document).ready(function() {
-                    alert('todo: insert em link into menu');//$('#control-center-plugins').detach().insertAfter('#control_center_menu div:last').show();
+                    $('#SurveyLinkLookupExternalModule')
+                        .detach()
+                        .insertAfter('#control_center_menu a:contains("<?php echo $lang['control_center_4582'];?>")')
+                        .show();
                 });
                 </script>
                 <?php
