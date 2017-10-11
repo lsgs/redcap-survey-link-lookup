@@ -24,6 +24,20 @@
 				"icon": "search",
 				"url": "index.php"
 			}
+		],
+		"module-script": [
+			{
+				"name": "Module Script",
+				"icon": "n/a",
+				"url": "survey_link_lookup.js"
+			}
+		],
+		"link-lookup-ajax": [
+			{
+				"name": "Link Lookup Ajax Endpoint",
+				"icon": "n/a",
+				"url": "link_lookup.php"
+			}
 		]
 	},
 

@@ -1,23 +1,21 @@
+"use strict";
 /**
- * Survey Link Looup External Module
+ * Survey Link Lookup External Module
  * @author Luke Stevens, Murdoch Children's Research Institute
  */
-(function($, app_path_webroot_full, app_path_webroot, undefined) {
+(function($, app_path_webroot, undefined) {
 
+    var module_url_index = '';
+    var module_url_ajax = '';
+    
     function getResults(lookupVal) {
         return $.getJSON( 
-            app_path_webroot_full+'modules/survey_link_lookup_v1.0/link_lookup.php', 
+            module_url_ajax, 
             { lookup: lookupVal },
             function(data) {
                 return data;
             }
-        )
-        .fail(function() {
-            return { 
-                success: false,
-                result: 'Lookup failed'
-            };
-        });
+        );
     }
 
     function searchBtnActiveState(active) {
@@ -47,6 +45,7 @@
 
     function displayResults(results) {
         if (!results) {
+            results = {};
             results.project_id = '';
             results.app_title = '';
             results.survey_title = '';
@@ -91,16 +90,23 @@
         clearResults();
         var searchFor = $('input#lookup_val').val();
         if (searchFor) {
-            window.history.pushState({ dummy: true },"REDCap", app_path_webroot_full+"/modules/survey_link_lookup_v1.0/index.php?lookup="+searchFor);
+            window.history.pushState({ dummy: true },"REDCap", module_url_index+'&lookup='+searchFor);
             resultPaneState('results_spin');
             searchBtnActiveState(false);
 
-            getResults(searchFor).then(function(results) {
-                if (results.success) {
-                    displayResults(results.result);
+            $.when(getResults(searchFor))
+            .always(function(results) {
+                if (results.lookup_success) {
+                    displayResults(results.lookup_result);
                     resultPaneState('results_detail');
                 } else {
-                    displayError(results.result);
+                    var resultMessage = 'Something went wrong with that lookup.';
+                    if (results.lookup_success===false) { 
+                        resultMessage = results.lookup_result; 
+                    } else if (results.responseText) { 
+                        resultMessage = results.responseText; 
+                    }                
+                    displayError(resultMessage);
                     resultPaneState('results_error');
                 }
                 searchBtnActiveState(true);
@@ -108,8 +114,29 @@
 
         }
     }
+    
+    function getQuerystringParameter(paramName) {
+        var searchString = window.location.search.substring(1),
+                i, val, params = searchString.split("&");
 
+        for (i=0; i<params.length; i++) {
+            val = params[i].split("=");
+            if (val[0]===paramName) {
+                return val[1];
+            }
+        }
+        return null;
+    }
+
+    function getModuleUrl(page) {
+        var qsId = getQuerystringParameter('id');
+        var urlQS = '?id='+qsId+'&page='+page;
+        return window.location.origin+window.location.pathname+urlQS;
+    }
+    
     function init() {
+        module_url_index = getModuleUrl('index');
+        module_url_ajax = getModuleUrl('link_lookup');
         clearResults();
         $('button#btnFind').click(function() {
             link_lookup();
@@ -121,4 +148,4 @@
         // if page loads with a value in the search box, look it up
         link_lookup();
     });
-})(jQuery, app_path_webroot_full, app_path_webroot);
+})(jQuery, app_path_webroot);

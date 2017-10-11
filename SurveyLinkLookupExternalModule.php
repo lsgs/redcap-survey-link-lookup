@@ -1,4 +1,8 @@
 <?php
+/**
+ * Survey Link Lookup External Module
+ * @author Luke Stevens, Murdoch Children's Research Institute
+ */
 namespace SurveyLinkLookupExternalModule;
 
 use ExternalModules\AbstractExternalModule;
@@ -27,16 +31,18 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
                         exit;
                 }
 
-                $link = REDCap::escapeHtml($link);
-
-                include APP_PATH_VIEWS . 'HomeTabs.php';
+                $moduleJS = $this->getUrl('survey_link_lookup.js');
                 ?>
                 <style type="text/css">
                     #pagecontent { margin-top: 70px; }
                 </style>
-                <script type="text/javascript" src="<?php echo APP_PATH_WEBROOT_FULL.'modules/survey_link_lookup_v1.0/survey_link_lookup.js';?>">
-                </script>
+                <script type="text/javascript" src="<?php echo $moduleJS;?>"></script>
                 <?php
+
+                $link = REDCap::escapeHtml($link);
+
+                include APP_PATH_VIEWS . 'HomeTabs.php';
+                
                 renderPageTitle('Survey Link Lookup');
 
                 print RCView::div(
@@ -89,10 +95,9 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;width:150px',
+                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_setup_page', 'href'=>'#'),
-                                                        'Project Setup'.
-                                                        RCView::img(array('src'=>APP_PATH_IMAGES.'chain_arrow.png', 'style'=>'margin-left:3px'))
+                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;Project Setup&nbsp;<span class="glyphicon glyphicon-share-alt"></span>'
                                                 )
                                         )
                                 ).
@@ -109,17 +114,16 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;width:150px',
+                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_designer_page', 'href'=>'#'),
-                                                        'Online Designer'.
-                                                        RCView::img(array('src'=>APP_PATH_IMAGES.'chain_arrow.png', 'style'=>'margin-left:3px'))
+                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;Online Designer&nbsp;<span class="glyphicon glyphicon-share-alt"></span>'
                                                 )
                                         )
                                 ).
                                 RCView::div(
                                         array('class'=>'row'),
                                         RCView::div(
-                                                array('class'=>'col-sm-2 col-md-3 col-lg-2', 'style'=>'color:#888'),
+                                                array('class'=>'col-sm-2 col-md-2 col-lg-2', 'style'=>'color:#888'),
                                                 'Record<br>Event<br>Instance'
                                         ).
                                         RCView::div(
@@ -129,10 +133,9 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;width:150px',
+                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_data_entry_page', 'href'=>'#'),
-                                                        'Data Entry Form'.
-                                                        RCView::img(array('src'=>APP_PATH_IMAGES.'chain_arrow.png', 'style'=>'margin-left:3px'))
+                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;Data Entry Form&nbsp;<span class="glyphicon glyphicon-share-alt"></span>'
                                                 )
                                         )
                                 )
@@ -145,27 +148,27 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
         
         public function lookup($lookup_val) {
                 $resultArray = array(
-                        'success' => false,
-                        'result' => ''
+                        'lookup_success' => false,
+                        'lookup_result' => ''
                 );
                 
                 if (!isset($lookup_val) || $lookup_val=='') {
-                        $resultArray['result'] = 'No link or survey hash provided';
+                        $resultArray['lookup_result'] = 'No link or survey hash provided';
                 } else {
                         $hash = $this->extractHash($lookup_val);
                         if (!isset($hash) || $hash=='') {
-                                $resultArray['result'] = "Nothing looking like a survey hash value found in '$lookup_val'";
+                                $resultArray['lookup_result'] = "Could not extract survey hash value (?s=hash) from '$lookup_val'";
                         } else {
                                 try {
                                         $details = $this->readSurveyDetailsFromHash($hash);
                                         if (count($details) > 0) {
-                                                $resultArray['success'] = true;
-                                                $resultArray['result'] = $details;
+                                                $resultArray['lookup_success'] = true;
+                                                $resultArray['lookup_result'] = $details;
                                         } else {
-                                            $resultArray['result'] = "Survey hash '$hash' not found";
+                                            $resultArray['lookup_result'] = "Survey hash '$hash' not found";
                                         }
                                 } catch (Exception $ex) {
-                                        $resultArray['result'] = $ex->getMessage();
+                                        $resultArray['lookup_result'] = $ex->getMessage();
                                 }
                         }                        
                 }
@@ -227,11 +230,12 @@ class SurveyLinkLookupExternalModule extends AbstractExternalModule
         public function hook_control_center() {
                 global $lang;
                 // insert a link to the plugin following control_center_4582 = "Find Calculation Errors in Projects"
+                $moduleUrl = $this->getUrl('index.php');
                 ?>
                 <span id="SurveyLinkLookupExternalModule" style="display:block;">
                     <img src="<?php echo APP_PATH_WEBROOT_FULL.'external_modules/images/puzzle_small.png';?>" style="position:relative;left:1px;">
                     <span class="glyphicon glyphicon-search" style="vertical-align:middle;"></span>
-                    <a href="<?php echo APP_PATH_WEBROOT_FULL.'modules/survey_link_lookup_v1.0/index.php'?>">Survey Link Lookup</a>
+                    <a href="<?php echo $moduleUrl;?>">Survey Link Lookup</a>
                 </span>
                 <script type='text/javascript'>
                 $(document).ready(function() {
