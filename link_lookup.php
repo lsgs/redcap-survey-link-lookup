@@ -5,7 +5,7 @@
  */
 header("Content-Type: application/json");
 
-$module = new SurveyLinkLookupExternalModule\SurveyLinkLookupExternalModule();
+$module = new MCRI\SurveyLinkLookup\SurveyLinkLookup();
 
 $lookupResult = array();
 

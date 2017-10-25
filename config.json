@@ -1,7 +1,7 @@
 {
 	"name": "Survey Link Lookup",
 
-	"namespace": "SurveyLinkLookupExternalModule",
+	"namespace": "MCRI\\SurveyLinkLookup",
 
 	"authors": [
 		{
@@ -12,7 +12,7 @@
 	],
 
 	"permissions": [
-             "hook_control_center"
+             "db_read"
 	],
 
 	"description": "This module provides a page where you can enter a survey link or hash and get the details of the survey, including links to project and data entry form. A Link to the page is added to the Control Center left-hand menu.",
@@ -21,7 +21,7 @@
 		"control-center": [
 			{
 				"name": "Survey Link Lookup",
-				"icon": "search",
+				"icon": "link",
 				"url": "index.php"
 			}
 		],
@@ -42,6 +42,22 @@
 	},
 
 	"system-settings": [
+		{
+			"key": "page-instruction-text",
+			"name": "Page instruction text",
+			"required": true,
+			"allow-project-overrides": false,
+			"type": "text",
+			"default": "Enter a REDCap survey link or hash value to find the corresponding project, record and data entry form."
+		},
+		{
+			"key": "page-input-label",
+			"name": "Page input field label",
+			"required": true,
+			"allow-project-overrides": false,
+			"type": "text",
+			"default": "Survey link or hash"
+		}
 	],
 	
 	"project-settings": [

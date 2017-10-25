@@ -3,7 +3,7 @@
  * Survey Link Lookup External Module
  * @author Luke Stevens, Murdoch Children's Research Institute
  */
-(function($, app_path_webroot, undefined) {
+(function(window, document, $, app_path_webroot, undefined) {
 
     var module_url_index = '';
     var module_url_ajax = '';
@@ -148,4 +148,4 @@
         // if page loads with a value in the search box, look it up
         link_lookup();
     });
-})(jQuery, app_path_webroot);
+})(window, document, jQuery, app_path_webroot);
