@@ -15,7 +15,7 @@
              "db_read"
 	],
 
-	"description": "This module provides a page where you can enter a survey link or hash and get the details of the survey, including links to project and data entry form. A Link to the page is added to the Control Center left-hand menu.",
+	"description": "This system-level, Control Center module provides a page where superusers can enter a survey link or hash and get the details of the corresponnding survey, including links to project and data entry form.",
 
 	"links": {
 		"control-center": [
@@ -48,7 +48,7 @@
 			"required": true,
 			"allow-project-overrides": false,
 			"type": "text",
-			"default": "Enter a REDCap survey link or hash value to find the corresponding project, record and data entry form."
+			"default": "Enter a REDCap survey link or hash value to find the corresponding project, survey, record and data entry form."
 		},
 		{
 			"key": "page-input-label",

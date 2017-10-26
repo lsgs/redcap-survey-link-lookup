@@ -46,14 +46,17 @@
     function displayResults(results) {
         if (!results) {
             results = {};
-            results.project_id = '';
-            results.app_title = '';
-            results.survey_title = '';
-            results.app_title = '';
+            results.project_id='';
+            results.app_title='';
+            results.survey_title='';
+            results.app_title='';
             results.record='';
             results.event_id='';
+            results.arm_id='';
+            results.event_name='';
             results.form_name='';
             results.instance='';
+            results.is_public_survey_link=false;
         }
         var setupPageHref = (results.project_id) 
             ? app_path_webroot+'ProjectSetup/index.php?pid='+results.project_id
@@ -64,6 +67,9 @@
         var dataEntryPageHref = (results.project_id && results.record) 
             ? app_path_webroot+'DataEntry/index.php?pid='+results.project_id+'&id='+results.record+'&event_id='+results.event_id+'&page='+results.form_name+'&instance='+results.instance
             : '#';
+        var publicSurveyPageHref = (results.project_id && results.is_public_survey_link) 
+            ? app_path_webroot+'Surveys/invite_participants.php?pid='+results.project_id+'&public_survey=1&arm_id='+results.arm_id
+            : '#';
 
         $('span#result_project_id').html(results.project_id);
         $('span#result_app_title').html(results.app_title);
@@ -73,7 +79,8 @@
         $('span#result_instance').html(results.instance);
         $('a#result_link_setup_page').attr('href', setupPageHref);
         $('a#result_link_designer_page').attr('href', designPageHref);
-        $('a#result_link_data_entry_page').attr('href', dataEntryPageHref);
+        $('a#result_link_data_entry_page').attr('href', dataEntryPageHref).toggle(results.is_public_survey_link==false);
+        $('a#result_link_public_survey_page').attr('href', publicSurveyPageHref).toggle(results.is_public_survey_link==true);
     }
 
     function displayError(msg) {
@@ -141,11 +148,15 @@
         $('button#btnFind').click(function() {
             link_lookup();
         });
+        $('input#lookup_val').keydown(function(event) {
+            if(event.keyCode==13) { 
+                $('button#btnFind').focus().click(); 
+            }
+        });
     }
 
     $(document).ready(function() {
         init();
-        // if page loads with a value in the search box, look it up
-        link_lookup();
+        link_lookup(); // look up anything in the search box on page load
     });
 })(window, document, jQuery, app_path_webroot);

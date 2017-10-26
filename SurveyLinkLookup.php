@@ -12,7 +12,6 @@ use ExternalModules\ExternalModules;
 use REDCap;
 use HtmlPage;
 use RCView;
-use Project;
 
 /**
  * REDCap External Module: Survey Link Lookup 
@@ -103,7 +102,7 @@ class SurveyLinkLookup extends AbstractExternalModule
                                         ).
                                         RCView::div(
                                                 array('class'=>'col-sm-6 col-md-6 col-lg-6'),
-                                                '<span id="result_app_title"></span> (id=<span id="result_project_id"]."></span>)'
+                                                '<span id="result_app_title"></span> <span class="text-muted">(pid=<span id="result_project_id"]."></span>)</span>'
                                         ).
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
@@ -149,6 +148,11 @@ class SurveyLinkLookup extends AbstractExternalModule
                                                         array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_data_entry_page', 'href'=>'#'),
                                                         '<span class="glyphicon glyphicon-link"></span>&nbsp;'.$lang['global_35'].'&nbsp;<span class="glyphicon glyphicon-share-alt"></span>' //Data Collection Instrument
+                                                ).
+                                                RCView::a(
+                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;display:none;',
+                                                            'id'=>'result_link_public_survey_page', 'href'=>'#'),
+                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;'.$lang['app_22'].'&nbsp;<span class="glyphicon glyphicon-share-alt"></span>' //Manage Survey Participants (Public Survey Link)
                                                 )
                                         )
                                 )
@@ -226,16 +230,26 @@ class SurveyLinkLookup extends AbstractExternalModule
          * @return array
          */
         private function readSurveyDetailsFromHash($hash) {
-
+                global $lang;
+                
                 $details = array();
 
                 if (isset($hash) && $hash!=='') {
 
-                        $sql = "SELECT s.survey_id,s.project_id,pr.app_title,s.form_name,s.title as survey_title,p.participant_id,p.event_id,p.hash,r.response_id,r.record,r.instance,r.start_time,r.first_submit_time,r.completion_time,r.return_code,r.results_code ".
+                        $sql = "SELECT s.survey_id,s.project_id,s.form_name,s.title as survey_title".
+                                ",pr.app_title,pr.repeatforms".
+                                ",p.participant_id,p.event_id,p.hash,IF(p.participant_email IS NULL,1,0) as is_public_survey_link".
+                                ",em.descrip".
+                                ",ea.arm_id,ea.arm_num,ea.arm_name".
+                                ",proj_ea.num_project_arms".
+                                ",r.response_id,r.record,r.instance,r.start_time,r.first_submit_time,r.completion_time,r.return_code,r.results_code ".
                             "FROM redcap_surveys s ".
                             "INNER JOIN redcap_projects pr ON s.project_id = pr.project_id ".
                             "INNER JOIN redcap_surveys_participants p ON s.survey_id = p.survey_id ".
-                            "INNER JOIN redcap_surveys_response r ON p.participant_id = r.participant_id ".
+                            "INNER JOIN redcap_events_metadata em ON em.event_id = p.event_id ".
+                            "INNER JOIN redcap_events_arms ea ON ea.arm_id = em.arm_id ".
+                            "INNER JOIN (SELECT project_id, COUNT(arm_id) as num_project_arms FROM redcap_events_arms GROUP BY project_id) proj_ea ON proj_ea.project_id = pr.project_id ".
+                            "LEFT OUTER JOIN redcap_surveys_response r ON p.participant_id = r.participant_id ".
                             "WHERE hash = '".db_real_escape_string($hash)."' LIMIT 1";
 
                         $result = db_query($sql);
@@ -246,13 +260,18 @@ class SurveyLinkLookup extends AbstractExternalModule
                         // get event name (with arm ref, if multiple)
                         if (isset($details['project_id']) && intval($details['project_id']) > 0) {
                                 $event_name = '';
-                                $project = new Project($details['project_id']);
-                                if (!$project->longitudinal) {
-                                        $event_name = 'N/A';
-                                } else if ($project->multiple_arms) {
-                                        $event_name = $project->eventInfo[$details['event_id']]['name_ext'];
+                                
+                                if ($details['is_public_survey_link']) {
+                                    $details['record'] = $lang['survey_279']; // Public Survey Link
+                                    if (intval($details['num_project_arms']) > 1) { $event_name = $details['descrip']." (".$details['arm_name'].")"; }
+                                    $details['instance'] = '';
+                                    
+                                } else if (!$details['repeatforms']) {
+                                        $event_name = $lang['control_center_149']; // N/A (not a longitudinal project)
                                 } else {
-                                        $event_name = $project->eventInfo[$details['event_id']]['name'];
+                                        $event_name = (intval($details['num_project_arms']) > 1)
+                                                ? $event_name = $details['descrip']." (".$details['arm_name'].")"
+                                                : $event_name = $details['descrip']; 
                                 }
                                 $details['event_name'] = $event_name;
                         }
