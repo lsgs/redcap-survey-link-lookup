@@ -15,7 +15,7 @@
              "db_read"
 	],
 
-	"description": "This system-level, Control Center module provides a page where superusers can enter a survey link or hash and get the details of the corresponnding survey, including links to project and data entry form.",
+	"description": "This system-level, Control Center module provides a page where superusers can enter a survey link or hash and get the details of the corresponding survey, including links to project and data entry form.",
 
 	"links": {
 		"control-center": [
