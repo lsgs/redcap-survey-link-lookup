@@ -4,6 +4,8 @@
  * Look up the project / survey / record / event / instance corresponding to 
  * an individual survey link or hash.
  * @author Luke Stevens, Murdoch Children's Research Institute
+ * TODO
+ * - Include Control Center header and footer
  */
 namespace MCRI\SurveyLinkLookup;
 
@@ -32,13 +34,9 @@ class SurveyLinkLookup extends AbstractExternalModule
         public function printPage($link='') {
                 global $lang;
                 
-		$page = new HtmlPage();
-		$page->PrintHeaderExt();
-                
                 if (!SUPER_USER) {
                         displayMsg($lang['global_05'], 'errorMsg','center','red','exclamation_frame.png', 600);
-                        $page->PrintFooterExt();
-                        exit;
+                        return;
                 }
 
                 $moduleJS = $this->getUrl('survey_link_lookup.js');
@@ -82,7 +80,7 @@ class SurveyLinkLookup extends AbstractExternalModule
 
                 print RCView::div(
                         array(
-                                'id'=>'results', 'class'=>'container well', 'style'=>'width:inherit; font-size:120%; display:none;'
+                                'id'=>'results', 'class'=>'container well', 'style'=>'width:100%; font-size:120%; display:none;'
                         ),
                         RCView::div(
                                 array('id'=>'results_spin', 'class'=>'row', 'style'=>'display:block;text-align:center;'),
@@ -158,9 +156,7 @@ class SurveyLinkLookup extends AbstractExternalModule
                                 )
                         )
                 );
-
-                $page->PrintFooterExt();
-                exit;
+                return;
         }
         
         /**

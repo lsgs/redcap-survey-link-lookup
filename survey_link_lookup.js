@@ -136,8 +136,8 @@
     }
 
     function getModuleUrl(page) {
-        var qsId = getQuerystringParameter('id');
-        var urlQS = '?id='+qsId+'&page='+page;
+        var qsId = getQuerystringParameter('prefix');
+        var urlQS = '?prefix='+qsId+'&page='+page;
         return window.location.origin+window.location.pathname+urlQS;
     }
     
