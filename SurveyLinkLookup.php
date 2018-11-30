@@ -71,8 +71,8 @@ class SurveyLinkLookup extends AbstractExternalModule
                                                     'id'=>'lookup_val','value'=>$link)
                                         ).
                                         RCView::button(
-                                                array('id'=>'btnFind', 'class'=>'btn btn-primary','type'=>'button'),
-                                                '<span class="glyphicon glyphicon-search"></span>&nbsp;'.$lang['control_center_439'].'&nbsp;'
+                                                array('id'=>'btnFind', 'class'=>'btn btn-primaryrc','type'=>'button'),
+                                                '<span class="fa f-search"></span>&nbsp;'.$lang['control_center_439'].'&nbsp;'
                                         )
                                 )
                         )
@@ -105,9 +105,9 @@ class SurveyLinkLookup extends AbstractExternalModule
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
+                                                        array('class'=>'btn btn-xs btn-defaultrc', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_setup_page', 'href'=>'#'),
-                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;'.$lang['app_17'].'&nbsp;<span class="glyphicon glyphicon-share-alt"></span>' //Project Setup
+                                                        '<span class="fa fa-link"></span>&nbsp;'.$lang['app_17'].'&nbsp;<span class="fa fa-external-link-alt"></span>' //Project Setup
                                                 )
                                         )
                                 ).
@@ -124,9 +124,9 @@ class SurveyLinkLookup extends AbstractExternalModule
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
+                                                        array('class'=>'btn btn-xs btn-defaultrc', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_designer_page', 'href'=>'#'),
-                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;'.$lang['design_25'].'&nbsp;<span class="glyphicon glyphicon-share-alt"></span>' //Online Designer
+                                                        '<span class="fa fa-link"></span>&nbsp;'.$lang['design_25'].'&nbsp;<span class="fa fa-external-link-alt"></span>' //Online Designer
                                                 )
                                         )
                                 ).
@@ -143,14 +143,14 @@ class SurveyLinkLookup extends AbstractExternalModule
                                         RCView::div(
                                                 array('class'=>'col-sm-3 col-md-3 col-lg-3'),
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
+                                                        array('class'=>'btn btn-xs btn-defaultrc', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;',
                                                             'id'=>'result_link_data_entry_page', 'href'=>'#'),
-                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;'.$lang['global_35'].'&nbsp;<span class="glyphicon glyphicon-share-alt"></span>' //Data Collection Instrument
+                                                        '<span class="fa fa-link"></span>&nbsp;'.$lang['global_35'].'&nbsp;<span class="fa fa-external-link-alt"></span>' //Data Collection Instrument
                                                 ).
                                                 RCView::a(
-                                                        array('class'=>'btn btn-xs btn-default', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;display:none;',
+                                                        array('class'=>'btn btn-xs btn-defaultrc', 'target'=>'_blank', 'style'=>'text-align:center;min-width:12em;display:none;',
                                                             'id'=>'result_link_public_survey_page', 'href'=>'#'),
-                                                        '<span class="glyphicon glyphicon-link"></span>&nbsp;'.$lang['app_22'].'&nbsp;<span class="glyphicon glyphicon-share-alt"></span>' //Manage Survey Participants (Public Survey Link)
+                                                        '<span class="fa fa-link"></span>&nbsp;'.$lang['app_22'].'&nbsp;<span class="fa fa-external-link-alt"></span>' //Manage Survey Participants (Public Survey Link)
                                                 )
                                         )
                                 )
