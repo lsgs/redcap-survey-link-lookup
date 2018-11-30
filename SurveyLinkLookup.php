@@ -4,8 +4,6 @@
  * Look up the project / survey / record / event / instance corresponding to 
  * an individual survey link or hash.
  * @author Luke Stevens, Murdoch Children's Research Institute
- * TODO
- * - Include Control Center header and footer
  */
 namespace MCRI\SurveyLinkLookup;
 
